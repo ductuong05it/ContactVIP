@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.contactvip.data.entity.CallHistory;
 import com.example.contactvip.databinding.ItemCallHistoryBinding;
+import com.example.contactvip.utils.AvatarUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,6 +60,7 @@ public class CallHistoryAdapter extends ListAdapter<CallHistory, CallHistoryAdap
             binding.tvCallerName.setText(callHistory.contactName != null ? callHistory.contactName : callHistory.phoneNumber);
             binding.tvCallDetails.setText(callHistory.callType + " • " + callHistory.phoneNumber);
             binding.tvTimestamp.setText(sdf.format(new Date(callHistory.timestamp)));
+            AvatarUtils.loadAvatar(itemView.getContext(), callHistory.avatarUri, callHistory.contactName, callHistory.timestamp, binding.ivAvatar);
         }
     }
 }

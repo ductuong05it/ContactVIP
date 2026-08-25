@@ -7,9 +7,7 @@ import androidx.room.PrimaryKey;
 public class Contact {
     @PrimaryKey(autoGenerate = true)
     public long id;
-    public String firstName;
-    public String lastName;
-    public String phoneNumber;
+    public String name;
     public String email;
     public String company;
     public String jobTitle;
@@ -21,9 +19,6 @@ public class Contact {
     public long updatedAt;
 
     public String getFullName() {
-        String first = (firstName != null) ? firstName : "";
-        String last = (lastName != null) ? lastName : "";
-        String full = (first + " " + last).trim();
-        return full.isEmpty() ? phoneNumber : full;
+        return (name != null) ? name : "";
     }
 }

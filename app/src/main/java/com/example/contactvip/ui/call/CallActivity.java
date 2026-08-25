@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contactvip.data.entity.CallHistory;
 import com.example.contactvip.databinding.ActivityCallBinding;
+import com.example.contactvip.utils.AvatarUtils;
 import com.example.contactvip.viewmodel.CallHistoryViewModel;
 
 public class CallActivity extends AppCompatActivity {
@@ -42,6 +43,15 @@ public class CallActivity extends AppCompatActivity {
         binding.tvCallerName.setText(contactName != null ? contactName : phoneNumber);
 
         binding.btnEndCall.setOnClickListener(v -> finish());
+
+        if (contactId != -1) {
+            new ViewModelProvider(this).get(com.example.contactvip.viewmodel.ContactViewModel.class)
+                .getContactById(contactId).observe(this, contact -> {
+                    if (contact != null) {
+                        AvatarUtils.loadAvatar(this, contact.avatarUri, contact.getFullName(), contact.updatedAt, binding.ivAvatar);
+                    }
+                });
+        }
 
         // Simulate connecting then start real call
         new Handler(Looper.getMainLooper()).postDelayed(this::startRealCall, 2000);

@@ -57,6 +57,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/favorite"
                 app:icon="@drawable/ic_star" />
+
+            <Button
+                android:id="@+id/btn_share"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share"
+                app:icon="@drawable/ic_settings" />
         </LinearLayout>
 
         <View
@@ -65,12 +73,24 @@
             android:layout_marginTop="24dp"
             android:background="?android:attr/listDivider" />
 
-        <TextView
-            android:id="@+id/tv_phone"
+        <LinearLayout
+            android:id="@+id/phones_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:textSize="16sp" />
+            android:orientation="vertical"
+            android:padding="4dp" />
+
+        <LinearLayout
+            android:id="@+id/groups_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/group_chips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_email"

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contactvip.data.entity.Contact;
+import com.example.contactvip.data.entity.ContactDisplay;
 import com.example.contactvip.databinding.ActivityDialerBinding;
 import com.example.contactvip.ui.call.CallActivity;
 import com.example.contactvip.viewmodel.ContactViewModel;
@@ -82,9 +83,9 @@ public class DialerActivity extends AppCompatActivity {
         // Simple search logic
         contactViewModel.getAllContacts().observe(this, contacts -> {
             foundContact = null;
-            for (Contact contact : contacts) {
-                if (contact.phoneNumber != null && contact.phoneNumber.contains(number)) {
-                    foundContact = contact;
+            for (ContactDisplay display : contacts) {
+                if (display.primaryPhone != null && display.primaryPhone.contains(number)) {
+                    foundContact = display.contact;
                     break;
                 }
             }

@@ -9,13 +9,11 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.contactvip.data.entity.Contact;
+import com.example.contactvip.data.entity.ContactDisplay;
 import com.example.contactvip.databinding.ItemContactBinding;
 import com.example.contactvip.utils.AvatarUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ContactAdapter extends ListAdapter<Contact, ContactAdapter.ContactViewHolder> {
+public class ContactAdapter extends ListAdapter<ContactDisplay, ContactAdapter.ContactViewHolder> {
     private final OnContactClickListener listener;
 
     public interface OnContactClickListener {
@@ -27,17 +25,20 @@ public class ContactAdapter extends ListAdapter<Contact, ContactAdapter.ContactV
         this.listener = listener;
     }
 
-    private static final DiffUtil.ItemCallback<Contact> DIFF_CALLBACK = new DiffUtil.ItemCallback<Contact>() {
+    private static final DiffUtil.ItemCallback<ContactDisplay> DIFF_CALLBACK = new DiffUtil.ItemCallback<ContactDisplay>() {
         @Override
-        public boolean areItemsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
-            return oldItem.id == newItem.id;
+        public boolean areItemsTheSame(@NonNull ContactDisplay oldItem, @NonNull ContactDisplay newItem) {
+            return oldItem.contact.id == newItem.contact.id;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
-            return oldItem.phoneNumber.equals(newItem.phoneNumber) &&
-                    oldItem.getFullName().equals(newItem.getFullName()) &&
-                    (oldItem.avatarUri == null ? newItem.avatarUri == null : oldItem.avatarUri.equals(newItem.avatarUri));
+        public boolean areContentsTheSame(@NonNull ContactDisplay oldItem, @NonNull ContactDisplay newItem) {
+            // Kiểm tra updatedAt để kích hoạt load lại ảnh
+            return oldItem.contact.updatedAt == newItem.contact.updatedAt &&
+                    oldItem.contact.isFavorite == newItem.contact.isFavorite &&
+                    (oldItem.contact.avatarUri == null ? newItem.contact.avatarUri == null : oldItem.contact.avatarUri.equals(newItem.contact.avatarUri)) &&
+                    (oldItem.primaryPhone == null ? newItem.primaryPhone == null : oldItem.primaryPhone.equals(newItem.primaryPhone)) &&
+                    (oldItem.contact.name == null ? newItem.contact.name == null : oldItem.contact.name.equals(newItem.contact.name));
         }
     };
 
@@ -55,10 +56,8 @@ public class ContactAdapter extends ListAdapter<Contact, ContactAdapter.ContactV
 
     public int getPositionForSection(char section) {
         for (int i = 0; i < getItemCount(); i++) {
-            Contact contact = getItem(i);
-            String nameForIndexing = (contact.lastName != null && !contact.lastName.isEmpty()) 
-                ? contact.lastName.toUpperCase() 
-                : contact.firstName.toUpperCase();
+            ContactDisplay item = getItem(i);
+            String nameForIndexing = (item.contact.name != null) ? item.contact.name.toUpperCase() : "";
             
             if (!nameForIndexing.isEmpty() && nameForIndexing.charAt(0) == section) {
                 return i;
@@ -75,11 +74,11 @@ public class ContactAdapter extends ListAdapter<Contact, ContactAdapter.ContactV
             this.binding = binding;
         }
 
-        public void bind(Contact contact, OnContactClickListener listener) {
-            binding.tvContactName.setText(contact.getFullName());
-            binding.tvPhoneNumber.setText(contact.phoneNumber);
-            AvatarUtils.loadAvatar(itemView.getContext(), contact.avatarUri, contact.getFullName(), binding.ivAvatar);
-            itemView.setOnClickListener(v -> listener.onContactClick(contact));
+        public void bind(ContactDisplay item, OnContactClickListener listener) {
+            binding.tvContactName.setText(item.getFullName());
+            binding.tvPhoneNumber.setText(item.primaryPhone != null ? item.primaryPhone : "");
+            AvatarUtils.loadAvatar(itemView.getContext(), item.contact.avatarUri, item.getFullName(), item.contact.updatedAt, binding.ivAvatar);
+            itemView.setOnClickListener(v -> listener.onContactClick(item.contact));
         }
     }
 }

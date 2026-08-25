@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.contactvip.data.entity.Contact;
+import com.example.contactvip.data.entity.ContactDisplay;
 
 import java.util.List;
 
@@ -22,18 +23,27 @@ public interface ContactDao {
     @Delete
     void delete(Contact contact);
 
-    @Query("SELECT * FROM contacts ORDER BY lastName ASC, firstName ASC")
-    LiveData<List<Contact>> getAllContacts();
+    @Query("SELECT contacts.*, (SELECT phoneNumber FROM contact_phones WHERE contactId = contacts.id ORDER BY isPrimary DESC, id ASC LIMIT 1) as primaryPhone FROM contacts ORDER BY name ASC")
+    LiveData<List<ContactDisplay>> getAllContacts();
 
-    @Query("SELECT * FROM contacts WHERE isFavorite = 1 ORDER BY lastName ASC, firstName ASC")
-    LiveData<List<Contact>> getFavoriteContacts();
+    @Query("SELECT contacts.*, (SELECT phoneNumber FROM contact_phones WHERE contactId = contacts.id ORDER BY isPrimary DESC, id ASC LIMIT 1) as primaryPhone FROM contacts WHERE isFavorite = 1 ORDER BY name ASC")
+    LiveData<List<ContactDisplay>> getFavoriteContacts();
 
-    @Query("SELECT * FROM contacts WHERE firstName LIKE :query OR lastName LIKE :query OR phoneNumber LIKE :query")
-    LiveData<List<Contact>> searchContacts(String query);
+    @Query("SELECT DISTINCT contacts.*, (SELECT phoneNumber FROM contact_phones WHERE contactId = contacts.id ORDER BY isPrimary DESC, id ASC LIMIT 1) as primaryPhone FROM contacts " +
+           "LEFT JOIN contact_phones ON contacts.id = contact_phones.contactId " +
+           "WHERE name LIKE :query OR contact_phones.phoneNumber LIKE :query")
+    LiveData<List<ContactDisplay>> searchContacts(String query);
+
+    @Query("SELECT DISTINCT contacts.*, (SELECT phoneNumber FROM contact_phones WHERE contactId = contacts.id ORDER BY isPrimary DESC, id ASC LIMIT 1) as primaryPhone FROM contacts " +
+           "INNER JOIN contact_group_cross_ref ON contacts.id = contact_group_cross_ref.contactId " +
+           "WHERE contact_group_cross_ref.groupId = :groupId")
+    LiveData<List<ContactDisplay>> getContactsByGroup(long groupId);
 
     @Query("SELECT * FROM contacts WHERE id = :id")
     LiveData<Contact> getContactById(long id);
 
-    @Query("SELECT * FROM contacts WHERE phoneNumber = :phoneNumber LIMIT 1")
+    @Query("SELECT contacts.* FROM contacts " +
+           "INNER JOIN contact_phones ON contacts.id = contact_phones.contactId " +
+           "WHERE contact_phones.phoneNumber = :phoneNumber LIMIT 1")
     Contact getContactByPhoneNumber(String phoneNumber);
 }
