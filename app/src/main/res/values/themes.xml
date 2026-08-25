@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ContactVIP" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="android:windowBackground">@color/background_light</item>
+    </style>
+
+    <style name="Theme.ContactVIP" parent="Base.Theme.ContactVIP" />
+
+    <style name="DialerButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.App.Rounded</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.Rounded" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>
