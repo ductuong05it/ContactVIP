@@ -71,7 +71,7 @@ public class ContactDetailActivity extends AppCompatActivity {
 
     private void displayContact(Contact contact) {
         binding.tvName.setText(contact.name);
-        AvatarUtils.loadAvatar(this, contact.avatarUri, contact.getFullName(), contact.updatedAt, binding.ivAvatar);
+        AvatarUtils.loadAvatar(this, contact.avatarUri, binding.ivAvatar);
         
         setupSection(binding.tvEmail, contact.email, "Email: ");
         setupSection(binding.tvCompany, contact.company, "Company: ");

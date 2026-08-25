@@ -48,7 +48,7 @@ public class CallActivity extends AppCompatActivity {
             new ViewModelProvider(this).get(com.example.contactvip.viewmodel.ContactViewModel.class)
                 .getContactById(contactId).observe(this, contact -> {
                     if (contact != null) {
-                        AvatarUtils.loadAvatar(this, contact.avatarUri, contact.getFullName(), contact.updatedAt, binding.ivAvatar);
+                        AvatarUtils.loadAvatar(this, contact.avatarUri, binding.ivAvatar);
                     }
                 });
         }

@@ -49,7 +49,8 @@ public class AddEditContactActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    AvatarUtils.loadAvatar(this, currentAvatarUri, getDisplayName(), System.currentTimeMillis(), binding.ivAvatar);
+                    // Preview ảnh mới ngay lập tức
+                    AvatarUtils.loadAvatar(this, currentAvatarUri, binding.ivAvatar);
                 }
             }
     );
@@ -156,9 +157,9 @@ public class AddEditContactActivity extends AppCompatActivity {
         binding.etAddress.setText(contact.address);
         binding.etNotes.setText(contact.notes);
         
-        // Cực kỳ quan trọng: Gán lại URI hiện tại để nếu không đổi ảnh thì vẫn giữ được ảnh cũ
+        // Gán lại URI hiện tại để nếu không đổi ảnh thì vẫn giữ được ảnh cũ
         this.currentAvatarUri = contact.avatarUri;
-        AvatarUtils.loadAvatar(this, contact.avatarUri, contact.name, contact.updatedAt, binding.ivAvatar);
+        AvatarUtils.loadAvatar(this, contact.avatarUri, binding.ivAvatar);
         
         // Load Phones
         new Thread(() -> {

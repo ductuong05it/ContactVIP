@@ -33,12 +33,15 @@ public class ContactAdapter extends ListAdapter<ContactDisplay, ContactAdapter.C
 
         @Override
         public boolean areContentsTheSame(@NonNull ContactDisplay oldItem, @NonNull ContactDisplay newItem) {
-            // Kiểm tra updatedAt để kích hoạt load lại ảnh
-            return oldItem.contact.updatedAt == newItem.contact.updatedAt &&
+            // Chỉ so sánh các giá trị hiển thị thực tế
+            String oldUri = oldItem.contact.avatarUri;
+            String newUri = newItem.contact.avatarUri;
+            boolean avatarSame = (oldUri == null && newUri == null) || (oldUri != null && oldUri.equals(newUri));
+            
+            return avatarSame &&
+                    oldItem.getFullName().equals(newItem.getFullName()) &&
                     oldItem.contact.isFavorite == newItem.contact.isFavorite &&
-                    (oldItem.contact.avatarUri == null ? newItem.contact.avatarUri == null : oldItem.contact.avatarUri.equals(newItem.contact.avatarUri)) &&
-                    (oldItem.primaryPhone == null ? newItem.primaryPhone == null : oldItem.primaryPhone.equals(newItem.primaryPhone)) &&
-                    (oldItem.contact.name == null ? newItem.contact.name == null : oldItem.contact.name.equals(newItem.contact.name));
+                    (oldItem.primaryPhone == null ? newItem.primaryPhone == null : oldItem.primaryPhone.equals(newItem.primaryPhone));
         }
     };
 
@@ -58,10 +61,7 @@ public class ContactAdapter extends ListAdapter<ContactDisplay, ContactAdapter.C
         for (int i = 0; i < getItemCount(); i++) {
             ContactDisplay item = getItem(i);
             String nameForIndexing = (item.contact.name != null) ? item.contact.name.toUpperCase() : "";
-            
-            if (!nameForIndexing.isEmpty() && nameForIndexing.charAt(0) == section) {
-                return i;
-            }
+            if (!nameForIndexing.isEmpty() && nameForIndexing.charAt(0) == section) return i;
         }
         return -1;
     }
@@ -77,7 +77,8 @@ public class ContactAdapter extends ListAdapter<ContactDisplay, ContactAdapter.C
         public void bind(ContactDisplay item, OnContactClickListener listener) {
             binding.tvContactName.setText(item.getFullName());
             binding.tvPhoneNumber.setText(item.primaryPhone != null ? item.primaryPhone : "");
-            AvatarUtils.loadAvatar(itemView.getContext(), item.contact.avatarUri, item.getFullName(), item.contact.updatedAt, binding.ivAvatar);
+            // Sử dụng avatarUri trực tiếp
+            AvatarUtils.loadAvatar(itemView.getContext(), item.contact.avatarUri, binding.ivAvatar);
             itemView.setOnClickListener(v -> listener.onContactClick(item.contact));
         }
     }

@@ -60,7 +60,7 @@ public class CallHistoryAdapter extends ListAdapter<CallHistory, CallHistoryAdap
             binding.tvCallerName.setText(callHistory.contactName != null ? callHistory.contactName : callHistory.phoneNumber);
             binding.tvCallDetails.setText(callHistory.callType + " • " + callHistory.phoneNumber);
             binding.tvTimestamp.setText(sdf.format(new Date(callHistory.timestamp)));
-            AvatarUtils.loadAvatar(itemView.getContext(), callHistory.avatarUri, callHistory.contactName, callHistory.timestamp, binding.ivAvatar);
+            AvatarUtils.loadAvatar(itemView.getContext(), callHistory.avatarUri, binding.ivAvatar);
         }
     }
 }
